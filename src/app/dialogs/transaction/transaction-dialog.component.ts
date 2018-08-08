@@ -28,7 +28,6 @@ export class TransactionDialogComponent implements OnInit, OnDestroy {
      */
     constructor(@Inject('AppService') public appService: any, private mdDialogRef: MatDialogRef<TransactionDialogComponent>, @Inject(MAT_DIALOG_DATA) private data) {
         this.transaction = this.data.transaction;
-        console.log(this.transaction.type);
         if (this.transaction.type == TransactionType.DeploySmartContract) {
             this.appService.getTransactionReceipt(this.transaction.hash).subscribe((response: any) => {
                 this.address = response.data.contractAddress;
