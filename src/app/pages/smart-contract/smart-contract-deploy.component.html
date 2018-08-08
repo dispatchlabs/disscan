@@ -1,12 +1,11 @@
-<div class="smart-contract-page">
+<div class="smart-contract-deploy">
     <div fxLayout="row" fxLayoutGap="20px" class="bg-dark p20">
         <div fxFlex="66">
             <h3>Smart Contract Code</h3>
             <div ace-editor #editor
                  [(text)]="code"
-                 [mode]="'sql'"
-                 [theme]="'eclipse'"
-                 [options]="options"
+                 [mode]="'solidity'"
+                 [theme]="'chrome'"
                  [readOnly]="false"
                  [autoUpdateContent]="true"
                  [durationBeforeCallback]="1000"

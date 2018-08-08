@@ -73,22 +73,22 @@ export class M2Service implements OnDestroy {
         this.m2State.subscribe((m2: M2) => {
             this.m2 = m2;
         });
-        this.routerSubscription = this.router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd && this.isBrowser) {
-                this.createOrUpdateMeta(event.url);
-            }
-        });
-        this.activatedRoute.queryParams.subscribe(params => {
-            if (params['sessionId'] && this.isBrowser) {
-                this.m2.sessionId = params['sessionId'];
-                this.store.dispatch(new M2Action(M2Action.M2_UPDATE, this.m2));
-                this.refresh().subscribe(response => {
-                    if (response.status === 'OK') {
-                        this.appEvents.emit({type: APP_SIGN_IN, account: response.account});
-                    }
-                });
-            }
-        });
+        // this.routerSubscription = this.router.events.subscribe((event) => {
+        //     if (event instanceof NavigationEnd && this.isBrowser) {
+        //         this.createOrUpdateMeta(event.url);
+        //     }
+        // });
+        // this.activatedRoute.queryParams.subscribe(params => {
+        //     if (params['sessionId'] && this.isBrowser) {
+        //         this.m2.sessionId = params['sessionId'];
+        //         this.store.dispatch(new M2Action(M2Action.M2_UPDATE, this.m2));
+        //         this.refresh().subscribe(response => {
+        //             if (response.status === 'OK') {
+        //                 this.appEvents.emit({type: APP_SIGN_IN, account: response.account});
+        //             }
+        //         });
+        //     }
+        // });
     }
 
     /**
@@ -112,22 +112,22 @@ export class M2Service implements OnDestroy {
      * @param {string} url
      */
     public createOrUpdateMeta(url: string): void {
-        this.post('m2.action.meta.FindByUrlAction', {url: url}).subscribe(response => {
-            if (response.status === 'OK') {
-                for (const _meta of response.metas) {
-                    if (_meta.name === 'title') {
-                        this.title.setTitle(_meta.content);
-                    }
+        // this.post('m2.action.meta.FindByUrlAction', {url: url}).subscribe(response => {
+        //     if (response.status === 'OK') {
+        //         for (const _meta of response.metas) {
+        //             if (_meta.name === 'title') {
+        //                 this.title.setTitle(_meta.content);
+        //             }
 
-                    const tag = {name: _meta.name, content: _meta.content ? _meta.content : ''};
-                    if (!this.meta.getTag('name="' + _meta.name + '"')) {
-                        this.meta.addTag(tag);
-                    } else {
-                        this.meta.updateTag(tag);
-                    }
-                }
-            }
-        });
+        //             const tag = {name: _meta.name, content: _meta.content ? _meta.content : ''};
+        //             if (!this.meta.getTag('name="' + _meta.name + '"')) {
+        //                 this.meta.addTag(tag);
+        //             } else {
+        //                 this.meta.updateTag(tag);
+        //             }
+        //         }
+        //     }
+        // });
     }
 
     /**

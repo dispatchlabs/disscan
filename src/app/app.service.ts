@@ -5,7 +5,6 @@ import {MatDialog, MatSnackBar} from '@angular/material';
 import {Store} from '@ngrx/store';
 import {AppState} from './app.state';
 import {APP_SERVER_DOWN_FOR_MAINTENANCE, APP_SIGN_OUT, M2Service} from './m2-angular/services/m2.service';
-import {SignInDialogComponent} from './dialogs/sign-in/sign-in-dialog.component';
 import {SendTokensDialogComponent} from './dialogs/send-tokens/send-tokens-dialog.component';
 import {TransactionDialogComponent} from './dialogs/transaction/transaction-dialog.component';
 import {Transaction} from './store/states/transaction';
@@ -126,25 +125,6 @@ export class AppService extends M2Service implements OnDestroy {
 
     /**
      *
-     * @returns {any}
-     */
-    public openSignIn(): any {
-        return this.mdDialogRef = this.mdDialog.open(SignInDialogComponent, {
-            disableClose: false,
-            width: '600px',
-            height: '',
-            position: {
-                top: '16px',
-                bottom: '',
-                left: '',
-                right: ''
-            },
-            data: {}
-        });
-    }
-
-    /**
-     *
      * @returns {MatDialogRef<SendTokensDialogComponent>}
      */
     public openSendTokens(): any {
@@ -260,7 +240,8 @@ export class AppService extends M2Service implements OnDestroy {
         const to = Buffer.from(transaction.to, 'hex');
         const value = this.numberToBuffer(transaction.value);
         const time = this.numberToBuffer(transaction.time);
-
+        const abi = this.stringToBuffer(transaction.abi);
+        
         // Type?
         switch (transaction.type) {
             case TransactionType.TransferTokens:
@@ -268,10 +249,9 @@ export class AppService extends M2Service implements OnDestroy {
                 break;
             case TransactionType.DeploySmartContract:
                 const code = Buffer.from(transaction.code, 'hex');
-                hash = keccak('keccak256').update(Buffer.concat([Buffer.from('01', 'hex'), from, to, value, code, time])).digest();
+                hash = keccak('keccak256').update(Buffer.concat([Buffer.from('01', 'hex'), from, to, value, code, abi, time])).digest();
                 break;
             case TransactionType.ExecuteSmartContract:
-                const abi = this.stringToBuffer(transaction.abi);
                 const method = this.stringToBuffer(transaction.method);
                 hash = keccak('keccak256').update(Buffer.concat([Buffer.from('02', 'hex'), from, to, value, abi, method, time])).digest();
                 break;
@@ -321,7 +301,16 @@ export class AppService extends M2Service implements OnDestroy {
      * @returns {any}
      */
     public getTransactions(): any {
-        const url = 'http://' + this.config.selectedDelegate.endpoint.host + ':1975' + '/v1/transactions';
+        const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions';
+        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
+    }
+
+    /**
+     *
+     * @returns {any}
+     */
+    public getTransactionReceipt(hash: string): any {
+        const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/receipts/' + hash;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
@@ -330,7 +319,7 @@ export class AppService extends M2Service implements OnDestroy {
      * @returns {any}
      */
     public getTransactionsFrom(address: string): any {
-        const url = 'http://' + this.config.selectedDelegate.endpoint.host + ':1975' + '/v1/transactions/from/' + address;
+        const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions/from/' + address;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 

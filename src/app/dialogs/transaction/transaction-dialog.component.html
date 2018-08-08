@@ -11,13 +11,16 @@
         <li>
             <strong>Hash:</strong> {{transaction?.hash}}
         </li>
+        <li *ngIf="address">
+            <strong>Contract Address:</strong> {{address}}
+        </li>
         <li>
             <strong>From Address:</strong> {{transaction?.from}}
         </li>
         <li *ngIf="transaction?.fromName">
             <strong>From Name:</strong> {{transaction?.fromName}}
         </li>
-        <li>
+        <li *ngIf="transaction?.to">
             <strong>To Address:</strong> {{transaction?.to}}
         </li>
         <li *ngIf="transaction?.toName">
@@ -27,7 +30,7 @@
             <strong>Value:</strong> {{transaction?.value}}
         </li>
         <li>
-            <strong>Time:</strong> {{transaction?.time}}
+            <strong>Time:</strong> {{transaction?.time | m2SimpleDateTime}}
         </li>
         <li>
             <strong>Signature:</strong> {{transaction?.signature}}

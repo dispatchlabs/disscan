@@ -1,4 +1,16 @@
 li {
   word-break: break-all;
   white-space: pre-line;
+  padding-top: .8em;
+
+  &:first-child {
+  	padding-top: 0;
+  }
+
+  strong {
+  	width: 100%;
+    display: inline-block;
+    font-size: .8em;
+    text-decoration: underline;
+  }
 }

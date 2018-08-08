@@ -30,7 +30,7 @@ export class SendTokensDialogComponent implements OnInit, OnDestroy {
     public configState: Observable<Config>;
     public config: Config;
     public configSubscription: any;
-    private id: any;
+    private hash: string;
     public KeyHelper = KeyHelper;
 
     /**
@@ -88,9 +88,9 @@ export class SendTokensDialogComponent implements OnInit, OnDestroy {
 
             this.appService.hashAndSign(this.formGroup.get('privateKey').value, transaction);
             this.spinner = true;
-            const url = 'http://' + this.config.selectedDelegate.endpoint.host + ':1975/v1/transactions';
+            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions';
             this.httpClient.post(url, JSON.stringify(transaction), {headers: {'Content-Type': 'application/json'}}).subscribe ((response: any) => {
-                this.id = response.id;
+                this.hash = transaction.hash;
                 this.getStatus();
             });
         });
@@ -101,7 +101,7 @@ export class SendTokensDialogComponent implements OnInit, OnDestroy {
      */
     private getStatus(): void {
         setTimeout(() => {
-            const url = 'http://' + this.config.selectedDelegate.endpoint.host + ':1975/v1/statuses/' + this.id;
+            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/receipts/' + this.hash;
             return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}}).subscribe( (response: any) => {
                 if (response.status === 'Pending') {
                     this.getStatus();

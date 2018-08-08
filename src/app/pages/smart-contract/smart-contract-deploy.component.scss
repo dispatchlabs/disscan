@@ -1,4 +1,4 @@
-.smart-contract-page {
+.smart-contract-deploy {
   min-height: calc(100vh - 200px);
   padding: 20px 40px 40px;
 
@@ -13,6 +13,10 @@
       margin: 0;
       white-space: normal;
     }
+  }
+
+  .ace_print-margin-layer {
+    display: none;
   }
 
   .bg-dark {

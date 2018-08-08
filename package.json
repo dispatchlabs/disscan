@@ -28,6 +28,7 @@
     "@ngrx/store": "^6.0.1",
     "@nguniversal/express-engine": "^6.0.0",
     "@nguniversal/module-map-ngfactory-loader": "^6.0.0",
+    "ace-mode-solidity": "^0.1.0",
     "angular-font-awesome": "^3.1.2",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.4",

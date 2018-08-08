@@ -40,6 +40,9 @@ export class AppComponent implements OnInit, AfterViewInit, DoCheck, OnDestroy {
         // this.configSubscription = this.configState.subscribe((config: Config) => {
         //     this.config = config;
         // });
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('scandis');
+        }
     }
 
     /**

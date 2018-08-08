@@ -36,7 +36,7 @@
                     <div fxLayout="row" *ngFor="let delegate of config?.delegates" class="list-item" (click)="select(delegate)">
                         <div fxFlex>
                             <ul class="none">
-                                <li>{{delegate.address}}</li>
+                                <!--li>{{delegate.address}}</li-->
                                 <li>{{delegate.endpoint.host}}</li>
                                 <li>{{delegate.endpoint.port}}</li>
                             </ul>
@@ -63,7 +63,7 @@
                             <div fxLayout="row">
                                 <div fxFlex class="relative">
                                     <mat-form-field >
-                                        <input [(ngModel)]="search" matInput placeholder="Enter Address" (keydown)="KeyHelper.onHexKeyDown($event, 40)">
+                                        <input [(ngModel)]="search" matInput placeholder="Enter 'From' Address">
                                     </mat-form-field>
                                 </div>
                                 <div class="search-button">
@@ -81,21 +81,21 @@
 
                             <!-- Value -->
                             <ng-container cdkColumnDef="value">
-                                <mat-header-cell *cdkHeaderCellDef class="right"> Value</mat-header-cell>
-                                <mat-cell *cdkCellDef="let row" class="right"> {{row.value}}</mat-cell>
+                                <mat-header-cell *cdkHeaderCellDef class="center"> Value</mat-header-cell>
+                                <mat-cell *cdkCellDef="let row" class="center"> {{row.value}}</mat-cell>
                             </ng-container>
 
                             <!-- Time -->
                             <ng-container cdkColumnDef="time">
-                                <mat-header-cell *cdkHeaderCellDef class="right"> Time</mat-header-cell>
-                                <mat-cell *cdkCellDef="let row" class="right"> {{row.time | m2SimpleDateTime}}</mat-cell>
+                                <mat-header-cell *cdkHeaderCellDef class="center"> Time</mat-header-cell>
+                                <mat-cell *cdkCellDef="let row" class="center"> {{row.time | m2SimpleDateTime}}</mat-cell>
                             </ng-container>
 
                             <!-- Type -->
                             <ng-container cdkColumnDef="type">
                                 <mat-header-cell *cdkHeaderCellDef class="right"> Type</mat-header-cell>
                                 <mat-cell *cdkCellDef="let row" class="right">
-                                    {{row.type}}
+                                    {{row.typeLabel}}
                                 </mat-cell>
                             </ng-container>
 

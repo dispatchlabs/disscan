@@ -14,11 +14,11 @@ declare const BrowserSolc: any;
  *
  */
 @Component({
-    selector: 'app-smart-contract-page',
-    templateUrl: './smart-contract-page.component.html',
-    styleUrls: ['./smart-contract-page.component.scss']
+    selector: 'app-smart-contract-deploy',
+    templateUrl: './smart-contract-deploy.component.html',
+    styleUrls: ['./smart-contract-deploy.component.scss']
 })
-export class SmartContractPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SmartContractDeployComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Class Level-declarations
@@ -31,7 +31,7 @@ export class SmartContractPageComponent implements OnInit, AfterViewInit, OnDest
     public compiling = false;
     public contract: any;
     public deploying = false;
-    public id: string;
+    public hash: string;
     public options: any;
 
     /**
@@ -106,14 +106,15 @@ export class SmartContractPageComponent implements OnInit, AfterViewInit, OnDest
                 from: this.config.account.address,
                 to: '',
                 value: 0,
-                code: this.contract.bytecode
+                code: this.contract.bytecode,
+                abi: this.contract.interface
             } as any;
 
             this.appService.hashAndSign(this.config.account.privateKey, transaction);
             this.deploying = true;
-            const url = 'http://' + this.config.selectedDelegate.endpoint.host + ':1975/v1/transactions';
+            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions';
             this.httpClient.post(url, JSON.stringify(transaction), {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
-                this.id = response.id;
+                this.hash = transaction.hash;
                 this.getStatus();
             });
         });
@@ -124,15 +125,16 @@ export class SmartContractPageComponent implements OnInit, AfterViewInit, OnDest
      */
     private getStatus(): void {
         setTimeout(() => {
-            const url = 'http://' + this.config.selectedDelegate.endpoint.host + ':1975/v1/statuses/' + this.id;
+            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/receipts/' + this.hash;
             return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
-                if (response.status === 'Pending') {
+                if (response.data.status === 'Pending') {
                     this.getStatus();
                     return;
                 }
 
                 this.deploying = false;
-                if (response.status === 'Ok') {
+                if (response.data.status === 'Ok') {
+                    console.log(response);
                     this.appService.success('Smart contract deployed.');
                     this.appService.appEvents.emit({type: APP_REFRESH});
                 } else {

@@ -198,13 +198,13 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                 for (const transaction of this.transactions) {
                     switch (transaction.type) {
                         case TransactionType.TransferTokens:
-                            transaction.type = 'Transfer Tokens';
+                            transaction.typeLabel = 'Transfer Tokens';
                             break;
                         case TransactionType.DeploySmartContract:
-                            transaction.type = 'Deploy Smart Contract';
+                            transaction.typeLabel = 'Deploy Smart Contract';
                             break;
                         case TransactionType.ExecuteSmartContract:
-                            transaction.type = 'Execute Smart Contract';
+                            transaction.typeLabel = 'Execute Smart Contract';
                             break;
                     }
                 }
@@ -215,13 +215,13 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                 for (const transaction of this.transactions) {
                     switch (transaction.type) {
                         case TransactionType.TransferTokens:
-                            transaction.type = 'Transfer Tokens';
+                            transaction.typeLabel = 'Transfer Tokens';
                             break;
                         case TransactionType.DeploySmartContract:
-                            transaction.type = 'Deploy Smart Contract';
+                            transaction.typeLabel = 'Deploy Smart Contract';
                             break;
                         case TransactionType.ExecuteSmartContract:
-                            transaction.type = 'Execute Smart Contract';
+                            transaction.typeLabel = 'Execute Smart Contract';
                             break;
                     }
                 }
