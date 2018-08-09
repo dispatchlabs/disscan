@@ -205,6 +205,15 @@ export class AppService extends M2Service implements OnDestroy {
 
     /**
      *
+     * @param {string} privateKey
+     * @returns {string} address
+     */
+    public getAddressFromPrivateKey(privateKey: string): string {
+        return this.toAddress(secp256k1.publicKeyCreate(Buffer.from(privateKey, 'hex'), false)).toString('hex');
+    }
+
+    /**
+     *
      * @param publicKey
      * @returns {any}
      */

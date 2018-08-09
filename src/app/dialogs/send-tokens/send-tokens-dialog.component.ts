@@ -48,7 +48,6 @@ export class SendTokensDialogComponent implements OnInit, OnDestroy {
         });
         this.formGroup = formBuilder.group({
             privateKey: new FormControl(this.config.account == null ? '' : this.config.account.privateKey, Validators.compose([Validators.required, Validators.minLength(64)])),
-            address: new FormControl(this.config.account == null ? '' : this.config.account.address, Validators.compose([Validators.required, Validators.minLength(40)])),
             to: new FormControl('', Validators.compose([Validators.required, Validators.minLength(40)])),
             tokens: new FormControl(45, Validators.compose([Validators.required, Validators.min(1)])),
         });
@@ -81,7 +80,7 @@ export class SendTokensDialogComponent implements OnInit, OnDestroy {
         this.appService.confirm('<p>Are you sure you want to send <b>' + this.formGroup.get('tokens').value + '</b> tokens to:</p> ' + this.formGroup.get('to').value + '?', () => {
             const transaction: Transaction = {
                 type: TransactionType.TransferTokens,
-                from: this.formGroup.get('address').value,
+                from: this.appService.getAddressFromPrivateKey(this.formGroup.get('privateKey').value),
                 to: this.formGroup.get('to').value,
                 value: parseInt(this.formGroup.get('tokens').value, 10)
             } as any;
