@@ -36,7 +36,6 @@
                     <div fxLayout="row" *ngFor="let delegate of config?.delegates" class="list-item" (click)="select(delegate)">
                         <div fxFlex>
                             <ul class="none">
-                                <!--li>{{delegate.address}}</li-->
                                 <li>{{delegate.endpoint.host}}</li>
                                 <li>{{delegate.endpoint.port}}</li>
                             </ul>
@@ -72,35 +71,24 @@
                             </div>
                         </div>
                         <mat-table #table [dataSource]="dataSource">
-
-                            <!-- To -->
-                            <ng-container cdkColumnDef="to">
-                                <mat-header-cell *cdkHeaderCellDef> To</mat-header-cell>
-                                <mat-cell *cdkCellDef="let row"> {{row.to}}</mat-cell>
+                            <ng-container matColumnDef="to">
+                                <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+                                <mat-cell *matCellDef="let row">{{row.to}}</mat-cell>
                             </ng-container>
-
-                            <!-- Value -->
-                            <ng-container cdkColumnDef="value">
-                                <mat-header-cell *cdkHeaderCellDef class="center"> Value</mat-header-cell>
-                                <mat-cell *cdkCellDef="let row" class="center"> {{row.value}}</mat-cell>
+                            <ng-container matColumnDef="value">
+                                <mat-header-cell *matHeaderCellDef class="center">Value</mat-header-cell>
+                                <mat-cell *matCellDef="let row" class="center">{{row.value}}</mat-cell>
                             </ng-container>
-
-                            <!-- Time -->
-                            <ng-container cdkColumnDef="time">
-                                <mat-header-cell *cdkHeaderCellDef class="center"> Time</mat-header-cell>
-                                <mat-cell *cdkCellDef="let row" class="center"> {{row.time | m2SimpleDateTime}}</mat-cell>
+                            <ng-container matColumnDef="time">
+                                <mat-header-cell *matHeaderCellDef class="center">Time</mat-header-cell>
+                                <mat-cell *matCellDef="let row" class="center">{{row.time | m2SimpleDateTime}}</mat-cell>
                             </ng-container>
-
-                            <!-- Type -->
-                            <ng-container cdkColumnDef="type">
-                                <mat-header-cell *cdkHeaderCellDef class="right"> Type</mat-header-cell>
-                                <mat-cell *cdkCellDef="let row" class="right">
-                                    {{row.typeLabel}}
-                                </mat-cell>
+                            <ng-container matColumnDef="type">
+                                <mat-header-cell *matHeaderCellDef class="right">Type</mat-header-cell>
+                                <mat-cell *matCellDef="let row" class="right">{{row.typeLabel}}</mat-cell>
                             </ng-container>
-
-                            <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *cdkRowDef="let row; columns: displayedColumns;" (click)="appService.openTransaction(row)"></mat-row>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="appService.openTransaction(row)"></mat-row>
                         </mat-table>
                     </div>
                     <ng-template #noActiveDelegateTemplate>

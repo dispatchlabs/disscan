@@ -39,11 +39,9 @@ import {FileUploadModule} from 'ng2-file-upload';
 import {M2Action} from './m2-angular/store/reducers/m2.reducer';
 import {CdkTableModule} from '@angular/cdk/table';
 import {AppState} from './app.state';
-import {BlogListPageComponent} from './pages/blog/blog-list-page.component';
 import {M2Module} from './m2-angular/m2.module';
 import {APP_CLEAR_ALL_STATES} from './m2-angular/services/m2.service';
 import {MetaPageComponent} from './pages/meta/meta-page.component';
-import {NewsListPageComponent} from './pages/news/news-list-page.component';
 import {ConfigAction} from './store/reducers/config.reducer';
 import {SendTokensDialogComponent} from './dialogs/send-tokens/send-tokens-dialog.component';
 import {TransactionDialogComponent} from './dialogs/transaction/transaction-dialog.component';
@@ -62,16 +60,6 @@ export const routes: Routes = [
     {path: '', pathMatch: 'full', component: HomePageComponent},
     {path: 'smart-contract', component: SmartContractDeployComponent},
     {path: 'meta', component: MetaPageComponent, pathMatch: 'full'},
-    {path: 'blog', component: BlogListPageComponent, pathMatch: 'full'},
-    {
-        path: 'blog/:slug',
-        loadChildren: './pages/blog/blog.module#BlogModule'
-    },
-    {path: 'news', component: NewsListPageComponent},
-    {
-        path: 'news/:slug',
-        loadChildren: './pages/news/news.module#NewsModule'
-    },
     {path: 'wallet', component: WalletPageComponent},
     {path: '**', component: NotFoundPageComponent}
 ];
@@ -118,9 +106,7 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         // Pages
         HomePageComponent,
         NotFoundPageComponent,
-        BlogListPageComponent,
         MetaPageComponent,
-        NewsListPageComponent,
         SmartContractDeployComponent,
         WalletPageComponent,
         // Components

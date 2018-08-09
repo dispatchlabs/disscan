@@ -144,13 +144,9 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public refresh(): void {
         this.loading = true;
-        setTimeout(() => {
-            this.loading = false;
-        }, 500);
         this.appService.getDelegates().subscribe((response: any) => {
             this.loading = false;
             if (response.status !== 'Ok') {
-                this.loading = false;
                 this.appService.error(response.status);
                 return;
             }
@@ -185,13 +181,6 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
         this.refreshOverlay = true;
-        setTimeout(() => {
-            this.refreshOverlay = false;
-            if (this.transactions && this.transactions.length > 0) {
-                this.dataSource = new TransactionDataSource(new TransactionDatabase(this.transactions));
-
-            }
-        }, 500);
         if (M2Util.isNullOrEmpty(this.search)) {
             this.appService.getTransactions().subscribe(response => {
                 this.transactions = response.data;
@@ -208,6 +197,8 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                             break;
                     }
                 }
+                this.dataSource = new TransactionDataSource(new TransactionDatabase(this.transactions));
+                this.refreshOverlay = false;
             });
         } else {
             this.appService.getTransactionsFrom(this.search).subscribe(response => {
@@ -225,6 +216,8 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                             break;
                     }
                 }
+                this.dataSource = new TransactionDataSource(new TransactionDatabase(this.transactions));
+                this.refreshOverlay = false;
             });
         }
     }
