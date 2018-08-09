@@ -95,7 +95,7 @@ export class M2Service implements OnDestroy {
      *
      */
     ngOnDestroy() {
-        this.routerSubscription.unsubscribe();
+        // this.routerSubscription.unsubscribe();
     }
 
     /**

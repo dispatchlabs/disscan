@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, Input, OnInit, AfterViewInit, OnChanges, DoCheck} from '@angular/core';
+import {Component, ViewEncapsulation, Input, OnInit, AfterViewInit, OnChanges, DoCheck, OnDestroy } from '@angular/core';
 
 /**
  * M2Notification
@@ -9,7 +9,7 @@ import {Component, ViewEncapsulation, Input, OnInit, AfterViewInit, OnChanges, D
     styleUrls: ['./m2-notification.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class M2NotificationComponent implements OnInit, AfterViewInit, DoCheck {
+export class M2NotificationComponent implements OnInit, AfterViewInit, DoCheck, OnDestroy {
 
     /**
      * Class level-declarations.
@@ -39,6 +39,12 @@ export class M2NotificationComponent implements OnInit, AfterViewInit, DoCheck {
      *
      */
     ngDoCheck() {
+    }
+
+    /**
+     *
+     */
+    ngOnDestroy() {
     }
 
     /**

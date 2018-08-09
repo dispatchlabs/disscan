@@ -72,6 +72,7 @@ export class AppService extends M2Service implements OnDestroy {
      */
     ngOnDestroy() {
         this.configSubscription.unsubscribe();
+        this.appEventSubscription.unsubscribe();
     }
 
     /**
