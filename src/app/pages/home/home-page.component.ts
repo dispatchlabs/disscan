@@ -16,6 +16,8 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {TransactionType} from '../../store/states/transaction-type';
 
+import {noop as _noop} from 'lodash-es';
+
 /**
  *
  */
@@ -86,7 +88,6 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('getStartedDiv')
     public getStartedDiv: any;
     public loading = true;
-    public refreshOverlay = false;
     public configState: Observable<Config>;
     public config: Config;
     public configSubscription: any;
@@ -96,6 +97,8 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
     public displayedColumns = ['to', 'value', 'time', 'type'];
     public search: string;
     public KeyHelper = KeyHelper;
+    private currentPage: number = 1;
+    private _hasMore: boolean = true;
 
     /**
      *
@@ -151,9 +154,11 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                 return;
             }
             this.config.delegates = response.data;
-            if (!this.config.selectedDelegate) {
-                this.config.selectedDelegate = this.config.delegates[0];
-            }
+            this.config.selectedDelegate = this.config.delegates[0];
+            this.currentPage = 1;
+            this._hasMore = true;
+            this.transactions = [];
+            this.search = null;
             this.getTransactions();
 
             for (let i = 0; i < this.config.delegates.length; i++) {
@@ -170,7 +175,32 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
     public select(delegate: Node): void {
         this.config.selectedDelegate = delegate;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+        this.currentPage = 1;
+        this._hasMore = true;
+        this.transactions = [];
         this.getTransactions();
+    }
+
+    public handleScroll(scrolled: boolean): void {
+        if (scrolled) {
+            this.currentPage++;
+            this.getTransactions();
+        } else {
+            _noop();
+        }
+    }
+    public hasMore(): boolean {
+        return this._hasMore;
+    }
+
+    /**
+     *
+     */
+    public searchTransactions(): void {
+        this.currentPage = 1;
+        this._hasMore = true;
+        this.transactions = [];
+        return this.getTransactions();
     }
 
     /**
@@ -180,11 +210,9 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.config.selectedDelegate) {
             return;
         }
-        this.refreshOverlay = true;
         if (M2Util.isNullOrEmpty(this.search)) {
-            this.appService.getTransactions().subscribe(response => {
-                this.transactions = response.data;
-                for (const transaction of this.transactions) {
+            this.appService.getTransactions(this.currentPage).subscribe(response => {
+                for (const transaction of response.data) {
                     switch (transaction.type) {
                         case TransactionType.TransferTokens:
                             transaction.typeLabel = 'Transfer Tokens';
@@ -197,13 +225,15 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                             break;
                     }
                 }
+                this.transactions.push(...response.data);
+                if (response.data.length < 100) {
+                    this._hasMore = false;
+                }
                 this.dataSource = new TransactionDataSource(new TransactionDatabase(this.transactions));
-                this.refreshOverlay = false;
             });
         } else {
-            this.appService.getTransactionsFrom(this.search).subscribe(response => {
-                this.transactions = response.data;
-                for (const transaction of this.transactions) {
+            this.appService.getTransactionsFrom(this.search, this.currentPage).subscribe(response => {
+                for (const transaction of response.data) {
                     switch (transaction.type) {
                         case TransactionType.TransferTokens:
                             transaction.typeLabel = 'Transfer Tokens';
@@ -216,8 +246,11 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                             break;
                     }
                 }
+                this.transactions.push(...response.data);
+                if (response.data.length < 100) {
+                    this._hasMore = false;
+                }
                 this.dataSource = new TransactionDataSource(new TransactionDatabase(this.transactions));
-                this.refreshOverlay = false;
             });
         }
     }

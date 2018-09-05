@@ -8,6 +8,13 @@
     background: rgba(0, 0, 0, 0.05);
   }
 
+  .mat-header-row {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    background-color: #74298C;
+  }
+
   a {
     .fa {
       transition: all .3s;
@@ -37,6 +44,19 @@
 
   .list-body {
     background: rgba(0,0,0,0.15);
+
+    .list-results {
+      justify-content: flex-start;
+      display: flex;
+      flex-direction: column;
+
+      app-scroll-container {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: auto;
+        max-height: 1000px;
+      }
+    }
   }
 
   .list-item {
