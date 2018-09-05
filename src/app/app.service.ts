@@ -320,7 +320,7 @@ export class AppService extends M2Service implements OnDestroy {
      * @returns {any}
      */
     public getTransactionReceipt(hash: string): any {
-        const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/receipts/' + hash;
+        const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions/' + hash;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
