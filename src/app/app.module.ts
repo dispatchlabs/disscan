@@ -54,6 +54,8 @@ import {AceEditorModule} from 'ng2-ace-editor';
 import {AccountDialogComponent} from './dialogs/account/account-dialog.component';
 import {WalletPageComponent} from './pages/wallet/wallet-page.component';
 
+import {ScrollContainerComponent} from './scroll-container/scroll-container.component';
+
 /**
  *
  */
@@ -115,7 +117,8 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         SendTokensDialogComponent,
         TransactionDialogComponent,
         ExecuteDialogComponent,
-        AccountDialogComponent
+        AccountDialogComponent,
+        ScrollContainerComponent
     ],
     imports: [
         // Angular

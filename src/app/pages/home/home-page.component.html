@@ -10,17 +10,6 @@
         </div>
     </div>
 
-    <div *ngIf="refreshOverlay" class="loading-overlay">
-        <div class="loading">
-            <div class="ping"></div>
-            <div class="ping one"></div>
-            <div class="ping two"></div>
-            <div class="icon">
-                <img src="assets/images/icon-character-black.png">
-            </div>
-        </div>
-    </div>
-
     <div class="container" *ngIf="!loading">
         <div fxLayout="column" fxLayout.gt-sm="row" ngClass.gt-sm="two-column-container" class="bg-dark p20">
             <div fxFlex.gt-sm="25" class="fade-in-up">
@@ -36,8 +25,8 @@
                     <div fxLayout="row" *ngFor="let delegate of config?.delegates" class="list-item" (click)="select(delegate)">
                         <div fxFlex>
                             <ul class="none">
-                                <li>{{delegate.endpoint.host}}</li>
-                                <li>{{delegate.endpoint.port}}</li>
+                                <li>{{delegate.httpEndpoint.host}}</li>
+                                <li>{{delegate.httpEndpoint.port}}</li>
                             </ul>
                         </div>
                         <div *ngIf="config.selectedDelegate?.address === delegate.address">
@@ -66,34 +55,38 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="search-button">
-                                    <button mat-icon-button [disabled]="search?.length < 40" (click)="getTransactions()"><mat-icon>search</mat-icon></button>
+                                    <button mat-icon-button [disabled]="search?.length < 40" (click)="searchTransactions()"><mat-icon>search</mat-icon></button>
                                 </div>
                             </div>
                         </div>
-                        <mat-table #table [dataSource]="dataSource">
-                            <ng-container matColumnDef="to">
-                                <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
-                                <mat-cell *matCellDef="let row" (click)="appService.openTransaction(row)">{{row.to}}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <mat-header-cell *matHeaderCellDef class="center">Value</mat-header-cell>
-                                <mat-cell *matCellDef="let row" class="center" (click)="appService.openTransaction(row)">{{row.value}}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="time">
-                                <mat-header-cell *matHeaderCellDef class="center">Time</mat-header-cell>
-                                <mat-cell *matCellDef="let row" class="center" (click)="appService.openTransaction(row)">{{row.time | m2SimpleDateTime}}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="type">
-                                <mat-header-cell *matHeaderCellDef class="left">Type</mat-header-cell>
-                                <mat-cell *matCellDef="let row" class="left" (click)="appService.openTransaction(row)">{{row.typeLabel}}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="execute">
-                                <mat-header-cell *matHeaderCellDef class="left"></mat-header-cell>
-                                <mat-cell *matCellDef="let row" class="left"><m2-button *ngIf="row.type == 1" (click)="appService.executeTransaction(row)" text="Execute"></m2-button></mat-cell>
-                            </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                        </mat-table>
+                        <div class="list-results">
+                            <app-scroll-container class="scrollHeight" [more]="hasMore()" (scrolled)="handleScroll($event)">
+                                <mat-table #table [dataSource]="dataSource">
+                                    <ng-container matColumnDef="to">
+                                        <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+                                        <mat-cell *matCellDef="let row">{{row.to}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="value">
+                                        <mat-header-cell *matHeaderCellDef class="center">Value</mat-header-cell>
+                                        <mat-cell *matCellDef="let row" class="center">{{row.value}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="time">
+                                        <mat-header-cell *matHeaderCellDef class="center">Time</mat-header-cell>
+                                        <mat-cell *matCellDef="let row" class="center">{{row.time | m2SimpleDateTime}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="type">
+                                        <mat-header-cell *matHeaderCellDef class="left">Type</mat-header-cell>
+                                        <mat-cell *matCellDef="let row" class="left">{{row.typeLabel}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="execute">
+                                        <mat-header-cell *matHeaderCellDef class="left"></mat-header-cell>
+                                        <mat-cell *matCellDef="let row" class="left"><m2-button *ngIf="row.type == 1" (click)="appService.executeTransaction(row)" text="Execute"></m2-button></mat-cell>
+                                    </ng-container>
+                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="appService.openTransaction(row)"></mat-row>
+                                </mat-table>
+                            </app-scroll-container>
+                        </div>
                     </div>
                     <ng-template #noActiveDelegateTemplate>
                         <div class="p20">

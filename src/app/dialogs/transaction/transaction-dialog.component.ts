@@ -30,7 +30,7 @@ export class TransactionDialogComponent implements OnInit, OnDestroy {
         this.transaction = this.data.transaction;
         if (this.transaction.type == TransactionType.DeploySmartContract) {
             this.appService.getTransactionReceipt(this.transaction.hash).subscribe((response: any) => {
-                this.address = response.data.contractAddress;
+                this.address = response.data.receipt.contractAddress;
             });
         }
     }
