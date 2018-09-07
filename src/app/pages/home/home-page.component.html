@@ -66,29 +66,33 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="search-button">
-                                    <button mat-icon-button [disabled]="search?.length < 40" (click)=" getTransactions()"><mat-icon>search</mat-icon></button>
+                                    <button mat-icon-button [disabled]="search?.length < 40" (click)="getTransactions()"><mat-icon>search</mat-icon></button>
                                 </div>
                             </div>
                         </div>
                         <mat-table #table [dataSource]="dataSource">
                             <ng-container matColumnDef="to">
                                 <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
-                                <mat-cell *matCellDef="let row">{{row.to}}</mat-cell>
+                                <mat-cell *matCellDef="let row" (click)="appService.openTransaction(row)">{{row.to}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="value">
                                 <mat-header-cell *matHeaderCellDef class="center">Value</mat-header-cell>
-                                <mat-cell *matCellDef="let row" class="center">{{row.value}}</mat-cell>
+                                <mat-cell *matCellDef="let row" class="center" (click)="appService.openTransaction(row)">{{row.value}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="time">
                                 <mat-header-cell *matHeaderCellDef class="center">Time</mat-header-cell>
-                                <mat-cell *matCellDef="let row" class="center">{{row.time | m2SimpleDateTime}}</mat-cell>
+                                <mat-cell *matCellDef="let row" class="center" (click)="appService.openTransaction(row)">{{row.time | m2SimpleDateTime}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="type">
                                 <mat-header-cell *matHeaderCellDef class="left">Type</mat-header-cell>
-                                <mat-cell *matCellDef="let row" class="left">{{row.typeLabel}}</mat-cell>
+                                <mat-cell *matCellDef="let row" class="left" (click)="appService.openTransaction(row)">{{row.typeLabel}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="execute">
+                                <mat-header-cell *matHeaderCellDef class="left"></mat-header-cell>
+                                <mat-cell *matCellDef="let row" class="left"><m2-button *ngIf="row.type == 1" (click)="appService.executeTransaction(row)" text="Execute"></m2-button></mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="appService.openTransaction(row)"></mat-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                         </mat-table>
                     </div>
                     <ng-template #noActiveDelegateTemplate>

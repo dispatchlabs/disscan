@@ -1,0 +1,24 @@
+<div class="dialog-header">
+    <button type="button" class="close" (click)="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    <h1 class="section-number">Execute Smart Contract</h1>
+</div>
+
+<mat-dialog-content>
+    <div [formGroup]="formGroup" fxLayout="column">
+        <mat-form-field>
+            <input matInput formControlName="privateKey" placeholder="Private Key">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select formControlName="method" placeholder="Method">
+                <mat-option *ngFor="let method of methods" [value]="method.name">{{method.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <div class="mt30">
+            <m2-button [disabled]="!formGroup.valid || spinner" [spinner]="spinner" (click)="send()" text="Send Tokens"></m2-button>
+        </div>
+    </div>
+</mat-dialog-content>

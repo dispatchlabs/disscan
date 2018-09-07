@@ -93,7 +93,7 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
     private appEventSubscription: any;
     public transactions: Transaction [];
     public dataSource: TransactionDataSource | null;
-    public displayedColumns = ['to', 'value', 'time', 'type'];
+    public displayedColumns = ['to', 'value', 'time', 'type', 'execute'];
     public search: string;
     public KeyHelper = KeyHelper;
 

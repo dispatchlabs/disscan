@@ -45,6 +45,7 @@ import {MetaPageComponent} from './pages/meta/meta-page.component';
 import {ConfigAction} from './store/reducers/config.reducer';
 import {SendTokensDialogComponent} from './dialogs/send-tokens/send-tokens-dialog.component';
 import {TransactionDialogComponent} from './dialogs/transaction/transaction-dialog.component';
+import {ExecuteDialogComponent} from './dialogs/execute/execute-dialog.component';
 import {HttpClientModule} from '@angular/common/http';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {SmartContractDeployComponent} from './pages/smart-contract/smart-contract-deploy.component';
@@ -113,6 +114,7 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         // Dialogs
         SendTokensDialogComponent,
         TransactionDialogComponent,
+        ExecuteDialogComponent,
         AccountDialogComponent
     ],
     imports: [
@@ -165,6 +167,7 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
     entryComponents: [
         SendTokensDialogComponent,
         TransactionDialogComponent,
+        ExecuteDialogComponent,
         AccountDialogComponent
     ],
     providers: [{provide: 'AppService', useClass: AppService}],

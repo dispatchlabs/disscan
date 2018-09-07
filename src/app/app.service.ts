@@ -7,6 +7,7 @@ import {AppState} from './app.state';
 import {APP_SERVER_DOWN_FOR_MAINTENANCE, APP_SIGN_OUT, M2Service} from './m2-angular/services/m2.service';
 import {SendTokensDialogComponent} from './dialogs/send-tokens/send-tokens-dialog.component';
 import {TransactionDialogComponent} from './dialogs/transaction/transaction-dialog.component';
+import {ExecuteDialogComponent} from './dialogs/execute/execute-dialog.component';
 import {Transaction} from './store/states/transaction';
 import {Observable} from 'rxjs';
 import {Config} from './store/states/config';
@@ -168,6 +169,28 @@ export class AppService extends M2Service implements OnDestroy {
      */
     public openTransaction(transaction: Transaction): any {
         return this.mdDialogRef = this.mdDialog.open(TransactionDialogComponent, {
+            width: '600px',
+            height: '',
+            position: {
+                top: '16px',
+                bottom: '',
+                left: '',
+                right: ''
+            },
+            data: {
+                transaction: transaction
+            }
+        });
+    }
+
+
+    /**
+     *
+     * @param {Transaction} transaction
+     * @returns {any}
+     */
+    public executeTransaction(transaction: Transaction): any {
+        return this.mdDialogRef = this.mdDialog.open(ExecuteDialogComponent, {
             width: '600px',
             height: '',
             position: {
