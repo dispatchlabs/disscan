@@ -55,6 +55,7 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
 
         this.formGroup = formBuilder.group({
             privateKey: new FormControl(this.config.account == null ? '' : this.config.account.privateKey, Validators.compose([Validators.required, Validators.minLength(64)])),
+            method: new FormControl('', Validators.compose([Validators.required])),
         });
     }
 

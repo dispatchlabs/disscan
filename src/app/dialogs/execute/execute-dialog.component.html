@@ -12,7 +12,7 @@
             <input matInput formControlName="privateKey" placeholder="Private Key">
         </mat-form-field>
         <mat-form-field>
-            <mat-select formControlName="method" placeholder="Method">
+            <mat-select formControlName="method" placeholder="Method" class="mat-primary">
                 <mat-option *ngFor="let method of methods" [value]="method.name">{{method.name}}</mat-option>
             </mat-select>
         </mat-form-field>
