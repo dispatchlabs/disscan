@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {AppService} from '../../app.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, FormArray, Validators} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../../store/states/config';
 import {AppState} from '../../app.state';
@@ -25,6 +25,7 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
      * Class Level Declarations
      */
     public transaction: Transaction;
+    public abi: any[];
 
     public formGroup: FormGroup;
     public spinner = false;
@@ -33,6 +34,7 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
     public configSubscription: any;
     public hash: string;
     public methods: any;
+    public paramsList: any[];
 
     /**
      *
@@ -49,13 +51,16 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
             this.config = config;
         });
         this.methods = [];
-        JSON.parse(this.transaction.abi).forEach((m) => {
+        this.abi = JSON.parse(this.transaction.abi);
+        this.abi.forEach((m) => {
             this.methods.push(m);
         });
 
         this.formGroup = formBuilder.group({
-            privateKey: new FormControl(this.config.account == null ? '' : this.config.account.privateKey, Validators.compose([Validators.required, Validators.minLength(64)])),
-            method: new FormControl('', Validators.compose([Validators.required])),
+            privateKey: new FormControl(this.config.account == null ? null : this.config.account.privateKey, Validators.compose([Validators.required, Validators.minLength(64)])),
+            tokens: new FormControl(null, Validators.compose([Validators.min(1)])),
+            method: new FormControl(null, Validators.compose([Validators.required])),
+            params: formBuilder.array([]),
         });
     }
 
@@ -63,6 +68,13 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
      *
      */
     ngOnInit() {
+        this.formGroup.get('method').valueChanges.subscribe(val => {
+            this.paramsList = this.abi[val].inputs;
+            this.formGroup.controls['params'] = new FormArray([]);
+            this.paramsList.forEach(item => {
+                this.params.push(this.formBuilder.control(null, Validators.compose([Validators.required])));
+            });
+        });
     }
 
     /**
@@ -70,6 +82,10 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy() {
         this.configSubscription.unsubscribe();
+    }
+
+    get params() {
+        return this.formGroup.controls['params'] as FormArray;
     }
 
     /**
@@ -85,8 +101,9 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
     public send(): void {
         this.appService.confirm('<p>Are you sure you want to execute this transaction?', () => {
             const transaction: Transaction = {
-                type: TransactionType.TransferTokens,
+                type: TransactionType.ExecuteSmartContract,
                 from: this.appService.getAddressFromPrivateKey(this.formGroup.get('privateKey').value),
+                to: this.transaction.receipt.contractAddress,
                 value: parseInt(this.formGroup.get('tokens').value, 10)
             } as any;
 

@@ -19,6 +19,7 @@ export interface Transaction {
     time: number;
     signature: string;
     hertz: number;
+    receipt: any;
     // Transients.
     fromName: string;
     toName: string;
