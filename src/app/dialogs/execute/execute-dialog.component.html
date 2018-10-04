@@ -12,16 +12,18 @@
             <input matInput formControlName="privateKey" placeholder="Private Key">
         </mat-form-field>
         <mat-form-field>
-            <input matInput formControlName="tokens" placeholder="Tokens" (keydown)="KeyHelper.onNumericKeyDown($event, 9)">
+            <input matInput formControlName="tokens" placeholder="Tokens">
         </mat-form-field>
         <mat-form-field>
             <mat-select formControlName="method" placeholder="Method" class="mat-primary">
                 <mat-option *ngFor="let method of methods; let i=index" [value]="i">{{method.name}}</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field *ngFor="let address of params.controls; let i=index">
-            <input matInput formControlName="i" [placeholder]="paramsList[i].name">
-        </mat-form-field>
+        <div formArrayName="params">
+            <mat-form-field *ngFor="let address of params.controls; let i=index;">
+                <input matInput [type]="paramsList[i].formType" [formControlName]="i" [placeholder]="paramsList[i].name">
+            </mat-form-field>
+        </div>
         <div class="mt30">
             <m2-button [disabled]="!formGroup.valid || spinner" [spinner]="spinner" (click)="send()" text="Send Tokens"></m2-button>
         </div>

@@ -115,6 +115,9 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.appEventSubscription = this.appService.appEvents.subscribe((event: any) => {
             switch (event.type) {
                 case APP_REFRESH:
+                    this.currentPage = 1;
+                    this._hasMore = true;
+                    this.transactions = [];
                     this.getTransactions();
                     return;
             }

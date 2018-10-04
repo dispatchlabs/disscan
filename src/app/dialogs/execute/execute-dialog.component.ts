@@ -58,8 +58,8 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
 
         this.formGroup = formBuilder.group({
             privateKey: new FormControl(this.config.account == null ? null : this.config.account.privateKey, Validators.compose([Validators.required, Validators.minLength(64)])),
-            tokens: new FormControl(null, Validators.compose([Validators.min(1)])),
-            method: new FormControl(null, Validators.compose([Validators.required])),
+            tokens: new FormControl(0),
+            method: new FormControl(null, Validators.required),
             params: formBuilder.array([]),
         });
     }
@@ -70,8 +70,29 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.formGroup.get('method').valueChanges.subscribe(val => {
             this.paramsList = this.abi[val].inputs;
-            this.formGroup.controls['params'] = new FormArray([]);
+            this.formGroup.controls['params'] = this.formBuilder.array([]);
             this.paramsList.forEach(item => {
+                switch(item.type) {
+                case 'uint':
+                case 'uint8':
+                case 'uint16':
+                case 'uint32':
+                case 'uint64':
+                case 'uint256':
+                case 'int':
+                case 'int8':
+                case 'int16':
+                case 'int32':
+                case 'int64':
+                case 'int256':
+                    item.formType = 'number';
+                    break;
+                case 'bool':
+                    item.formType = 'checkbox';
+                    break;
+                default:
+                    item.formType = 'text';
+                }
                 this.params.push(this.formBuilder.control(null, Validators.compose([Validators.required])));
             });
         });
@@ -100,13 +121,23 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
      */
     public send(): void {
         this.appService.confirm('<p>Are you sure you want to execute this transaction?', () => {
+            let params = [];
+            this.formGroup.get('params').value.forEach((p, i) => {
+                switch(this.paramsList[i].formType) {
+                case 'number':
+                    p = parseInt(p, 10);
+                    break;
+                }
+                params.push(p);
+            });
             const transaction: Transaction = {
                 type: TransactionType.ExecuteSmartContract,
                 from: this.appService.getAddressFromPrivateKey(this.formGroup.get('privateKey').value),
                 to: this.transaction.receipt.contractAddress,
-                value: parseInt(this.formGroup.get('tokens').value, 10)
+                value: parseInt(this.formGroup.get('tokens').value, 10) || 0,
+                method: this.methods[this.formGroup.get('method').value].name,
+                params: params
             } as any;
-
             this.appService.hashAndSign(this.formGroup.get('privateKey').value, transaction);
             this.spinner = true;
             const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions';
@@ -131,7 +162,7 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
 
                 if (response.status === 'Ok') {
                     this.close();
-                    this.appService.success('Tokens sent.');
+                    this.appService.success('Execution sent.');
                     this.appService.appEvents.emit({type: APP_REFRESH});
                 } else {
                     this.close();
