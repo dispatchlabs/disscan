@@ -20,9 +20,14 @@
             </mat-select>
         </mat-form-field>
         <div formArrayName="params">
-            <mat-form-field *ngFor="let address of params.controls; let i=index;">
-                <input matInput [type]="paramsList[i].formType" [formControlName]="i" [placeholder]="paramsList[i].name">
-            </mat-form-field>
+            <div *ngFor="let address of params.controls; let i=index;">
+                <mat-form-field *ngIf="paramsList[i].formType != 'checkbox'">
+                    <input matInput [type]="paramsList[i].formType" [formControlName]="i" [placeholder]="paramsList[i].name">
+                </mat-form-field>
+                <form-field>
+                    <mat-checkbox *ngIf="paramsList[i].formType == 'checkbox'" [formControlName]="i">{{paramsList[i].name}}</mat-checkbox>
+                </form-field>
+            </div>
         </div>
         <div class="mt30">
             <m2-button [disabled]="!formGroup.valid || spinner" [spinner]="spinner" (click)="send()" text="Send Tokens"></m2-button>
