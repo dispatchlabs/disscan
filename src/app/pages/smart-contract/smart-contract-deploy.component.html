@@ -1,35 +1,41 @@
 <div class="smart-contract-deploy">
     <div fxLayout="row" fxLayoutGap="20px" class="bg-dark p20">
         <div fxFlex="66">
-            <h3>Smart Contract Code</h3>
-            <div ace-editor #editor
-                 [(text)]="code"
-                 [mode]="'solidity'"
-                 [theme]="'chrome'"
-                 [readOnly]="false"
-                 [autoUpdateContent]="true"
-                 [durationBeforeCallback]="1000"
-                 (textChanged)="onChange($event)"
-                 style="min-height: 200px; width:100%; overflow: auto;"></div>
-            <div class="error-messages">
-                <pre *ngFor="let error of errors"><i class="fas fa-times-circle"></i> {{error}}</pre>
-            </div>
-            <div fxLayout="row" fxLayoutGap="20px">
-                <div fxFlex>
-                    <h3>Byte Code</h3>
-                    <div class="bg-dark">
-                        <pre>{{contract?.bytecode}}</pre>
+            <h3>Solidity Version</h3>
+            <mat-form-field>
+                <mat-select class="mat-primary" (selectionChange)="release = $event.value">
+                    <mat-option *ngFor="let r of releases" [value]="r">{{r.release}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div *ngIf="release !== false">
+                <h3>Smart Contract Code</h3>
+                <div ace-editor #editor
+                     [(text)]="code"
+                     [mode]="'solidity'"
+                     [theme]="'chrome'"
+                     [readOnly]="false"
+                     [autoUpdateContent]="true"
+                     [durationBeforeCallback]="1000"
+                     (textChanged)="onChange($event)"
+                     style="min-height: 200px; width:100%; overflow: auto;"></div>
+                <div class="error-messages">
+                    <pre *ngFor="let error of errors"><i class="fas fa-times-circle"></i> {{error}}</pre>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div fxFlex>
+                        <h3>Byte Code</h3>
+                        <div class="bg-dark">
+                            <pre>{{contract?.bytecode}}</pre>
+                        </div>
+                    </div>
+                    <div fxFlex>
+                        <h3>ABI</h3>
+                        <div  class="bg-dark">
+                            <pre *ngIf="contract?.interface"> {{contract.interface | json}}</pre>
+                        </div>
                     </div>
                 </div>
-                <div fxFlex>
-                    <h3>ABI</h3>
-                    <div  class="bg-dark">
-                        <pre *ngIf="contract?.interface"> {{contract.interface | json}}</pre>
-                    </div>
-                </div>
             </div>
-
-
         </div>
         <div fxFlex="33" style="background: rgba(0,0,0,0.25); border-radius: 4px; padding: 20px; text-align: center">
             <m2-button text="compile" [spinner]="compiling" [disabled]="!code || code === ''" (click)="compile()"></m2-button>

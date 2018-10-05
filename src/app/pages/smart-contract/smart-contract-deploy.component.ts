@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterContentInit, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Transaction} from '../../store/states/transaction';
 import {AppState} from '../../app.state';
 import {Store} from '@ngrx/store';
@@ -18,11 +18,13 @@ declare const BrowserSolc: any;
     templateUrl: './smart-contract-deploy.component.html',
     styleUrls: ['./smart-contract-deploy.component.scss']
 })
-export class SmartContractDeployComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SmartContractDeployComponent implements OnInit, AfterContentInit, OnDestroy {
 
     /**
      * Class Level-declarations
      */
+    public releases = [];
+    public release: any = false;
     public configState: Observable<Config>;
     public config: Config;
     public configSubscription: any;
@@ -56,7 +58,14 @@ export class SmartContractDeployComponent implements OnInit, AfterViewInit, OnDe
     /**
      *
      */
-    ngAfterViewInit() {
+    ngAfterContentInit() {
+        BrowserSolc.getVersions((_, soljsonReleases) => {
+            for (let key in soljsonReleases) {
+                if (key.split('.')[1] === '4') {
+                    this.releases.push({release: key, source: soljsonReleases[key]});
+                }
+            }
+        });
     }
 
     /**
@@ -81,7 +90,7 @@ export class SmartContractDeployComponent implements OnInit, AfterViewInit, OnDe
         this.errors = [];
         this.contract = null;
         this.compiling = true;
-        BrowserSolc.loadVersion('soljson-v0.4.6+commit.2dabbdf0.js', (compiler) => {
+        BrowserSolc.loadVersion(this.release.source, (compiler) => {
             const optimize = 1;
             const result = compiler.compile(this.code, optimize);
             this.compiling = false;

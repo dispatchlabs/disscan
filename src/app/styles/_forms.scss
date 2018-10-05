@@ -121,3 +121,14 @@ button.mat-button, button.mat-raised-button {
     width: 100% !important;
   }
 
+div.mat-checkbox-background {
+  background-color: #74298c !important;
+  margin: 1px;
+}
+div.mat-checkbox-checkmark {
+  fill: #FFF;
+}
+div.mat-checkbox-frame {
+  border-width: 1px;
+  border-color: #FFF;
+}
