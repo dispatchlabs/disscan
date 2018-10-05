@@ -12,9 +12,6 @@
             <input matInput formControlName="privateKey" placeholder="Private Key">
         </mat-form-field>
         <mat-form-field>
-            <input matInput formControlName="tokens" placeholder="Tokens">
-        </mat-form-field>
-        <mat-form-field>
             <mat-select formControlName="method" placeholder="Method" class="mat-primary">
                 <mat-option *ngFor="let method of methods; let i=index" [value]="i">{{method.name}}</mat-option>
             </mat-select>
@@ -30,7 +27,7 @@
             </div>
         </div>
         <div class="mt30">
-            <m2-button [disabled]="!formGroup.valid || spinner" [spinner]="spinner" (click)="send()" text="Send Tokens"></m2-button>
+            <m2-button [disabled]="!formGroup.valid || spinner" [spinner]="spinner" (click)="send()" text="Execute Contract"></m2-button>
         </div>
     </div>
 </mat-dialog-content>

@@ -58,8 +58,7 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
 
         this.formGroup = formBuilder.group({
             privateKey: new FormControl(this.config.account == null ? null : this.config.account.privateKey, Validators.compose([Validators.required, Validators.minLength(64)])),
-            tokens: new FormControl(0),
-            method: new FormControl(null, Validators.required),
+            method: new FormControl(null, [Validators.required]),
             params: formBuilder.array([]),
         });
     }
@@ -72,6 +71,7 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
             this.paramsList = this.abi[val].inputs;
             this.formGroup.controls['params'] = this.formBuilder.array([]);
             this.paramsList.forEach(item => {
+                let defaultValue: any = '';
                 switch(item.type) {
                 case 'uint':
                 case 'uint8':
@@ -86,14 +86,16 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
                 case 'int64':
                 case 'int256':
                     item.formType = 'number';
+                    defaultValue = 0;
                     break;
                 case 'bool':
                     item.formType = 'checkbox';
+                    defaultValue = false;
                     break;
                 default:
                     item.formType = 'text';
                 }
-                this.params.push(this.formBuilder.control(null, Validators.compose([Validators.required])));
+                this.params.push(this.formBuilder.control(defaultValue, Validators.compose([Validators.required])));
             });
         });
     }
