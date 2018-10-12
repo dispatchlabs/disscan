@@ -310,8 +310,8 @@ export class AppService extends M2Service implements OnDestroy {
      *
      * @returns {any}
      */
-    public getTransactions(page: number): any {
-        const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions?page=' + (page || 1);
+    public getTransactions(page: number, pageSize: number, pageStart: string): any {
+        const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions?page=' + (page || 1) + '&pageSize=' + (pageSize || 20) + '&pageStart=' + pageStart;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 

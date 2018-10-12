@@ -98,6 +98,8 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
     public search: string;
     public KeyHelper = KeyHelper;
     private currentPage: number = 1;
+    private pageSize: number = 20;
+    private pageStart: string = '';
     private _hasMore: boolean = true;
 
     /**
@@ -115,7 +117,7 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.appEventSubscription = this.appService.appEvents.subscribe((event: any) => {
             switch (event.type) {
                 case APP_REFRESH:
-                    this.getTransactions();
+                    this.refresh();
                     return;
             }
         });
@@ -156,6 +158,7 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
             this.config.delegates = response.data;
             this.config.selectedDelegate = this.config.delegates[0];
             this.currentPage = 1;
+            this.pageStart = '';
             this._hasMore = true;
             this.transactions = [];
             this.search = null;
@@ -176,12 +179,14 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.config.selectedDelegate = delegate;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
         this.currentPage = 1;
+        this.pageStart = '';
         this._hasMore = true;
         this.transactions = [];
         this.getTransactions();
     }
 
     public handleScroll(scrolled: boolean): void {
+        console.log('scrolled = ' + scrolled);
         if (scrolled) {
             this.currentPage++;
             this.getTransactions();
@@ -198,6 +203,7 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public searchTransactions(): void {
         this.currentPage = 1;
+        this.pageStart = '';
         this._hasMore = true;
         this.transactions = [];
         return this.getTransactions();
@@ -211,7 +217,7 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
         if (M2Util.isNullOrEmpty(this.search)) {
-            this.appService.getTransactions(this.currentPage).subscribe(response => {
+            this.appService.getTransactions(this.currentPage, this.pageSize, this.pageStart).subscribe(response => {
                 for (const transaction of response.data) {
                     switch (transaction.type) {
                         case TransactionType.TransferTokens:
@@ -226,7 +232,8 @@ export class HomePageComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                 }
                 this.transactions.push(...response.data);
-                if (response.data.length < 100) {
+                this.pageStart = response.paging.pageStart;
+                if (this.transactions.length >= response.paging.count) {
                     this._hasMore = false;
                 }
                 this.dataSource = new TransactionDataSource(new TransactionDatabase(this.transactions));
