@@ -154,21 +154,19 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
      */
     private getStatus(): void {
         setTimeout(() => {
-            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/receipts/' + this.hash;
+            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions/' + this.hash;
             return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}}).subscribe( (response: any) => {
-                if (response.status === 'Pending') {
+                if (response.data.status !== 'Ok') {
+                    this.appService.error(response.status);
+                    return;
+                }
+                if (response.data.receipt.status != 'Ok') {
                     this.getStatus();
                     return;
                 }
-
-                if (response.status === 'Ok') {
-                    this.close();
-                    this.appService.success('Execution sent.');
-                    this.appService.appEvents.emit({type: APP_REFRESH});
-                } else {
-                    this.close();
-                    this.appService.error(response.status);
-                }
+                this.deploying = false;
+                this.appService.success('Smart contract executed.');
+                this.appService.appEvents.emit({type: APP_REFRESH});
             });
         }, 500);
     }
