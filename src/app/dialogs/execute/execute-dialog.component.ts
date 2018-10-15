@@ -156,7 +156,7 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions/' + this.hash;
             return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}}).subscribe( (response: any) => {
-                if (response.data.status !== 'Ok') {
+                if (response.status !== 'Ok') {
                     this.appService.error(response.status);
                     return;
                 }
