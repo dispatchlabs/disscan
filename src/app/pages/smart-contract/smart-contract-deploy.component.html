@@ -3,7 +3,7 @@
         <div fxFlex="66">
             <h3>Solidity Version</h3>
             <mat-form-field>
-                <mat-select class="mat-primary" (selectionChange)="release = $event.value">
+                <mat-select class="mat-primary" [(ngModel)]="release">
                     <mat-option *ngFor="let r of releases" [value]="r">{{r.release}}</mat-option>
                 </mat-select>
             </mat-form-field>

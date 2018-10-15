@@ -59,13 +59,24 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
      *
      */
     ngAfterContentInit() {
-        BrowserSolc.getVersions((_, soljsonReleases) => {
-            for (let key in soljsonReleases) {
-                if (key.split('.')[1] === '4') {
-                    this.releases.push({release: key, source: soljsonReleases[key]});
+        this.getReleases();
+    }
+
+    private getReleases() {
+        try {
+            BrowserSolc.getVersions((_, soljsonReleases) => {
+                for (let key in soljsonReleases) {
+                    if (key.split('.')[1] === '4') {
+                        this.releases.push({release: key, source: soljsonReleases[key]});
+                    }
                 }
-            }
-        });
+                this.release = this.releases[0];
+            });
+        } catch (e) {
+            setTimeout(() => {
+                this.getReleases();
+            }, 10);
+        }
     }
 
     /**
@@ -94,10 +105,8 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
             const optimize = 1;
             const result = compiler.compile(this.code, optimize);
             this.compiling = false;
-            console.log(result);
             this.errors = result.errors;
             this.contract = result.contracts[Object.keys(result.contracts)[0]];
-            console.log(this.contract);
         });
     }
 
@@ -136,21 +145,19 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
      */
     private getStatus(): void {
         setTimeout(() => {
-            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/receipts/' + this.hash;
+            const url = 'http://' + this.config.selectedDelegate.httpEndpoint.host + ':' + this.config.selectedDelegate.httpEndpoint.port + '/v1/transactions/' + this.hash;
             return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
-                if (response.data.status === 'Pending') {
+                if (response.data.status !== 'Ok') {
+                    this.appService.error(response.status);
+                    return;
+                }
+                if (response.data.receipt.status != 'Ok') {
                     this.getStatus();
                     return;
                 }
-
                 this.deploying = false;
-                if (response.data.status === 'Ok') {
-                    console.log(response);
-                    this.appService.success('Smart contract deployed.');
-                    this.appService.appEvents.emit({type: APP_REFRESH});
-                } else {
-                    this.appService.error(response.status);
-                }
+                this.appService.success('Smart contract deployed.');
+                this.appService.appEvents.emit({type: APP_REFRESH});
             });
         }, 500);
     }
