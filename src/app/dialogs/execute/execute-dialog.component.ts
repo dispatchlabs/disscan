@@ -136,7 +136,6 @@ export class ExecuteDialogComponent implements OnInit, OnDestroy {
                 type: TransactionType.ExecuteSmartContract,
                 from: this.appService.getAddressFromPrivateKey(this.formGroup.get('privateKey').value),
                 to: this.transaction.receipt.contractAddress,
-                value: parseInt(this.formGroup.get('tokens').value, 10) || 0,
                 method: this.methods[this.formGroup.get('method').value].name,
                 params: params
             } as any;

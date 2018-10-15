@@ -94,8 +94,10 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
             const optimize = 1;
             const result = compiler.compile(this.code, optimize);
             this.compiling = false;
+            console.log(result);
             this.errors = result.errors;
             this.contract = result.contracts[Object.keys(result.contracts)[0]];
+            console.log(this.contract);
         });
     }
 
