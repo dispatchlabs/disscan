@@ -51,7 +51,7 @@
                             <div fxLayout="row">
                                 <div fxFlex class="relative">
                                     <mat-form-field >
-                                        <input [(ngModel)]="search" matInput placeholder="Enter 'From' Address">
+                                        <input [(ngModel)]="search" matInput placeholder="Enter 'From' Address" (keyup.enter)="searchTransactions()">
                                     </mat-form-field>
                                 </div>
                                 <div class="search-button">
