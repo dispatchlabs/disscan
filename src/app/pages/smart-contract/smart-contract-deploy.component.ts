@@ -32,6 +32,8 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
     public errors = [];
     public compiling = false;
     public contract: any;
+    public bytecode: string = '';
+    public abi: string = '';
     public deploying = false;
     public hash: string;
     public options: any;
@@ -107,6 +109,8 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
             this.compiling = false;
             this.errors = result.errors;
             this.contract = result.contracts[Object.keys(result.contracts)[0]];
+            this.bytecode = this.contract.bytecode;
+            this.abi = this.contract.interface;
         });
     }
 
@@ -126,8 +130,8 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
                 from: this.config.account.address,
                 to: '',
                 value: 0,
-                code: this.contract.bytecode,
-                abi: this.contract.interface
+                code: this.bytecode,
+                abi: this.abi
             } as any;
 
             this.appService.hashAndSign(this.config.account.privateKey, transaction);

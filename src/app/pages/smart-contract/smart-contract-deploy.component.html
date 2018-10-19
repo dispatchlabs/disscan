@@ -25,13 +25,13 @@
                     <div fxFlex>
                         <h3>Byte Code</h3>
                         <div class="bg-dark">
-                            <pre>{{contract?.bytecode}}</pre>
+                            <textarea matInput mdTextareaAutosize rows="6" [(ngModel)]="bytecode"></textarea>
                         </div>
                     </div>
                     <div fxFlex>
                         <h3>ABI</h3>
-                        <div  class="bg-dark">
-                            <pre *ngIf="contract?.interface"> {{contract.interface | json}}</pre>
+                        <div class="bg-dark">
+                            <textarea matInput mdTextareaAutosize rows="6" [(ngModel)]="abi"></textarea>
                         </div>
                     </div>
                 </div>
