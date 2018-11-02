@@ -82,7 +82,7 @@ export class SendTokensDialogComponent implements OnInit, OnDestroy {
                 type: TransactionType.TransferTokens,
                 from: this.appService.getAddressFromPrivateKey(this.formGroup.get('privateKey').value),
                 to: this.formGroup.get('to').value,
-                value: parseInt(this.formGroup.get('tokens').value, 10)
+                value: this.formGroup.get('tokens').value + ''
             } as any;
 
             this.appService.hashAndSign(this.formGroup.get('privateKey').value, transaction);

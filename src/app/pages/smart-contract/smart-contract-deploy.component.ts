@@ -129,7 +129,7 @@ export class SmartContractDeployComponent implements OnInit, AfterContentInit, O
                 type: TransactionType.DeploySmartContract,
                 from: this.config.account.address,
                 to: '',
-                value: 0,
+                value: '0',
                 code: this.bytecode,
                 abi: this.abi
             } as any;
