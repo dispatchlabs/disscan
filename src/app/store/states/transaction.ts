@@ -11,14 +11,14 @@ export interface Transaction {
     typeLabel: string;
     from: string;
     to: string;
-    value: number;
+    value: string;
     code: string;
     abi: string;
     method: string;
     params: any;
     time: number;
     signature: string;
-    hertz: number;
+    hertz: string;
     receipt: any;
     // Transients.
     fromName: string;
