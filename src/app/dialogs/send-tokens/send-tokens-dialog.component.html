@@ -15,7 +15,7 @@
             <input matInput formControlName="to" placeholder="To Address">
         </mat-form-field>
         <mat-form-field>
-            <input matInput formControlName="tokens" placeholder="Tokens" (keydown)="KeyHelper.onNumericKeyDown($event, 9)">
+            <input matInput formControlName="tokens" placeholder="Tokens" (keydown)="KeyHelper.onNumericKeyDown($event, 19)">
         </mat-form-field>
         <div fxFlex>
             <a (click)="generatePrivateKeyAndAddress()"><i class="fa fa-plus-circle"></i> Generate New Private Key and Address</a>
