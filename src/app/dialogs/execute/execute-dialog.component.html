@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="mt30">
-            <m2-button [disabled]="!formGroup.valid || spinner" [spinner]="spinner" (click)="send()" text="Execute Contract"></m2-button>
+            <m2-button [disabled]="!formGroup.get('privateKey').valid || !formGroup.get('method').valid || !formGroup.get('params').valid || spinner" [spinner]="spinner" (click)="send()" text="Execute Contract"></m2-button>
         </div>
     </div>
 </mat-dialog-content>
