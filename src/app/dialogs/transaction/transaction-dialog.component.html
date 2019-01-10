@@ -26,8 +26,8 @@
         <li *ngIf="transaction?.toName">
             <strong>To Name:</strong> {{transaction?.toName}}
         </li>
-        <li>
-            <strong>Value:</strong> {{transaction?.value}}
+        <li *ngIf="transaction.type == transactionType.ExecuteSmartContract">
+            <strong>Result:</strong> {{transaction?.receipt?.contractResult}}
         </li>
         <li>
             <strong>Time:</strong> {{transaction?.time | m2SimpleDateTime}}
