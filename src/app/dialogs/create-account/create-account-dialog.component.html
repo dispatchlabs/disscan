@@ -1,0 +1,25 @@
+<div class="dialog-header">
+    <button type="button" class="close" (click)="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    <h1 class="section-number">Account</h1>
+</div>
+
+<mat-dialog-content>
+    <div [formGroup]="formGroup" fxLayout="column">
+        <mat-form-field>
+            <input matInput formControlName="privateKey" placeholder="Private Key">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput formControlName="address" placeholder="Address">
+        </mat-form-field>
+        <div fxFlex>
+            <a (click)="generatePrivateKeyAndAddress()"><i class="fa fa-plus-circle"></i> Generate New Private Key and Address</a>
+        </div>
+
+        <div class="mt30">
+            <m2-button (click)="save()" text="Save"></m2-button>
+        </div>
+    </div>
+</mat-dialog-content>
